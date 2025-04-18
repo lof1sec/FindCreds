@@ -26,7 +26,8 @@ $keywords = @(
     '(?i)password\"?\>\"?[^\"\s\;\)\<\(\{\}]{6,50}',
     "(?i)password\'?\>\'?[^\'\s\;\)\<\(\{\}]{6,50}",
     '(?i)textmode\s?\=\s?\"?passw',
-    "(?i)textmode\s?\=\s?\'?passw"
+    "(?i)textmode\s?\=\s?\'?passw",
+    "(?i)\<add.+passwo?r?d.+value.+\/\>"
 )
 
 # Set the root folder to search
