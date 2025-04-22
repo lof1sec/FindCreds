@@ -10,24 +10,18 @@ $extensions = @("*.txt", "*.vba", "*.py", "*.ini", "*.cfg", "*.config", "*.xml",
 # Define common password-related keywords (Regex)
 $keywords = @(
     '(?i)\<pass.+\<\/pass\>',
-    '(?i)\<password.+\<\/password\>',
-    '(?i)\<passwd.+\<\/passwd\>',
-    '(?i)\<password\>\n\s+\<value\>.+\<\/value\>',
-    "(?i)passwd\'?\s?\=\s?\'?[^\'\;\)\s\(\{\}]{6,50}",
-    '(?i)passwd\"?\s?\=\s?\"?[^\"\;\)\s\(\{\}]{6,50}',
-    "(?i)password\'?\s?\=\s?\'?[^\'\;\)\s\(\{\}]{6,50}",
-    '(?i)password\"?\s?\=\s?\"?[^\"\;\)\s\(\{\}]{6,50}',
-    "(?i)passwd\'?\s?\:\s?\'?[^\'\;\)\s\(\{\}]{6,50}",
-    '(?i)passwd\"?\s?\:\s?\"?[^\"\;\)\s\(\{\}]{6,50}',
-    "(?i)password\'?\s?\:\s?\'?[^\'\;\)\s\(\{\}]{6,50}",
-    '(?i)password\"?\s?\:\s?\"?[^\"\;\)\s\(\{\}]{6,50}',
-    '(?i)passwd\"?\>\"?[^\"\s\;\)\<\(\{\}]{6,50}',
-    "(?i)passwd\'?\>\'?[^\'\s\;\)\<\(\{\}]{6,50}",
-    '(?i)password\"?\>\"?[^\"\s\;\)\<\(\{\}]{6,50}',
-    "(?i)password\'?\>\'?[^\'\s\;\)\<\(\{\}]{6,50}",
-    '(?i)textmode\s?\=\s?\"?passw',
-    "(?i)textmode\s?\=\s?\'?passw",
-    "(?i)\<add.+passwo?r?d.+value.+\/\>"
+    '(?i)\<passwo?r?d.+\<\/passwo?r?d\>',
+    '(?i)\<passwo?r?d\>\n\s+\<value\>.+\<\/value\>',
+    "(?i)passwo?r?d\'?\s?\=\s?\'?[^\'\;\)\s\(\{\}]{6,50}",
+    '(?i)passwo?r?d\"?\s?\=\s?\"?[^\"\;\)\s\(\{\}]{6,50}',
+    "(?i)passwo?r?d\'?\s?\:\s?\'?[^\'\;\)\s\(\{\}]{6,50}",
+    '(?i)passwo?r?d\"?\s?\:\s?\"?[^\"\;\)\s\(\{\}]{6,50}',
+    '(?i)passwo?r?d\"?\>\"?[^\"\s\;\)\<\(\{\}]{6,50}',
+    "(?i)passwo?r?d\'?\>\'?[^\'\s\;\)\<\(\{\}]{6,50}",
+    '(?i)textmode\s?\=\s?\"?passwo?r?d',
+    "(?i)textmode\s?\=\s?\'?passwo?r?d",
+    "(?i)\<add.+passwo?r?d.+value.+\/\>",
+    "(?i)\<.+passwo?r?d.+value.+\/\w+\>"
 )
 
 # Set the root folder to search
@@ -64,12 +58,17 @@ $files = Get-ChildItem -Path $searchPath -Recurse -Force -Include $extensions -E
 foreach ($file in $files) {
     try {
         $content = Get-Content -Path $file.FullName -ErrorAction Stop
+        $lineNumber = 0
         foreach ($line in $content) {
+            $lineNumber++
             foreach ($keyword in $keywords) {
-                if ($line -match $keyword) {
-                    $result = "`n[+] Possible password found in: $($file.FullName)`n    >> $line"
-                    $result | Tee-Object -FilePath $outputFile -Append
-                    break  # Stop checking more keywords for this line
+                $matches = [regex]::Matches($line, $keyword)
+                if ($matches.Count -gt 0) {
+                    foreach ($match in $matches) {
+                        $result = "`n[+] Possible password found in: $($file.FullName)`n    Line $lineNumber >> $($match.Value)"
+                        $result | Tee-Object -FilePath $outputFile -Append
+                    }
+                    break  # Stop checking other keywords for this line (optional)
                 }
             }
         }
@@ -79,10 +78,10 @@ foreach ($file in $files) {
     }
 }
 
-# Define the file names to search that possibly contains passwords
+# Define the file names to search that possibly contain passwords
 $fileNames = @("plum.sqlite","unattend.xml")
 
-# Search recursively
+# Search recursively for those files
 $results = Get-ChildItem -Path $searchPath -Recurse -Force -ErrorAction SilentlyContinue -File |
     Where-Object { $fileNames -contains $_.Name.ToLower() }
 
@@ -93,7 +92,7 @@ foreach ($file in $results) {
     $path | Out-File -FilePath $outputFile -Append
 }
 
-# Look for folders that contains scripts with passwords
+# Look for folders that contain "scripts" or "script"
 $excludes = @("C:\Windows\WinSxS", "C:\Windows\SystemApps")
 
 Get-ChildItem -Path $searchPath -Directory -Recurse -Force -ErrorAction SilentlyContinue |
