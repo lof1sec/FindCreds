@@ -2,7 +2,7 @@
 FindCreds: Windows Passwords Searcher
 
 ```powershell
-PS C:\Users\arthur\Downloads> .\FindCreds.ps1
+PS C:\Users\user\Downloads> .\FindCreds.ps1
 
 ::::: FindCreds: Windows Passwords Searcher :::::
 by Lof1 ;)
