@@ -21,7 +21,7 @@ $keywords = @(
     '(?i)textmode\s?\=\s?\"?passwo?r?d',
     "(?i)textmode\s?\=\s?\'?passwo?r?d",
     "(?i)\<add.+passwo?r?d.+value.+\/\>",
-    "(?i)\<.+passwo?r?d.+value.+\/\w+\>"
+    "(?i)\<.{3,30}passwo?r?d.{1,30}value.+\/\w+\>"
 )
 
 # Set the root folder to search
