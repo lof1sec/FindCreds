@@ -1,10 +1,10 @@
 # FindCreds
-FindCreds: Windows Passwords Searcher
+FindCreds: Windows Password Searcher
 
 ```powershell
 PS C:\Users\user\Downloads> .\FindCreds.ps1
 
-::::: FindCreds: Windows Passwords Searcher :::::
+::::: FindCreds: Windows Password Searcher :::::
 by Lof1 ;)
 
 
