@@ -1,5 +1,5 @@
 Write-Output ""
-Write-Output "::::: FindCreds: Windows Passwords Searcher :::::"
+Write-Output "::::: FindCreds: Windows Password Searcher :::::"
 Write-Output "by Lof1 ;)"
 Write-Output ""
 Write-Output ""
@@ -77,7 +77,7 @@ foreach ($file in $files) {
         continue
     }
 }
-
+Write-Output ""
 # Define the file names to search that possibly contain passwords
 $fileNames = @("plum.sqlite","unattend.xml")
 
@@ -94,7 +94,7 @@ foreach ($file in $results) {
 
 # Look for folders that contain "scripts" or "script"
 $excludes = @("C:\Windows\WinSxS", "C:\Windows\SystemApps")
-
+Write-Output ""
 Get-ChildItem -Path $searchPath -Directory -Recurse -Force -ErrorAction SilentlyContinue |
 Where-Object {
     $_.Name -ieq "scripts" -and
